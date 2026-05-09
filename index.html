@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cocomokoko - Gremio Lost Ark</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a1a2e;
+            --secondary: #16213e;
+            --accent-gold: #d4af37;
+            --accent-blue: #0f3460;
+            --text-light: #e0e0e0;
+            --text-dark: #0a0e27;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 50%, #16213e 100%);
+            color: var(--text-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Efectos de fondo animados */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(15, 52, 96, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        header {
+            grid-column: 1 / -1;
+            text-align: center;
+            border-bottom: 2px solid var(--accent-gold);
+            padding-bottom: 30px;
+            margin-bottom: 30px;
+            background: linear-gradient(180deg, rgba(212, 175, 55, 0.1) 0%, transparent 100%);
+            border-radius: 10px;
+        }
+
+        .logo {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.2) 0%, transparent 100%);
+            border-radius: 50%;
+            border: 3px solid var(--accent-gold);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3), inset 0 0 30px rgba(212, 175, 55, 0.1);
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        .logo img {
+            width: 140px;
+            height: 140px;
+            object-fit: contain;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 30px rgba(212, 175, 55, 0.3), inset 0 0 30px rgba(212, 175, 55, 0.1); }
+            50% { box-shadow: 0 0 50px rgba(212, 175, 55, 0.6), inset 0 0 30px rgba(212, 175, 55, 0.2); }
+        }
+
+        h1 {
+            font-size: 3em;
+            margin: 20px 0 10px;
+            color: var(--accent-gold);
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.5), 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        /* Main Content */
+        main {
+            min-height: 600px;
+        }
+
+        .section {
+            background: linear-gradient(135deg, rgba(22, 33, 62, 0.8) 0%, rgba(26, 26, 46, 0.8) 100%);
+            border: 2px solid var(--accent-gold);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(212, 175, 55, 0.1);
+        }
+
+        .section h2 {
+            font-size: 2em;
+            color: var(--accent-gold);
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--accent-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h2 i {
+            color: var(--accent-gold);
+        }
+
+        .content-placeholder {
+            background: rgba(15, 52, 96, 0.3);
+            border: 2px dashed var(--accent-blue);
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 1.1em;
+        }
+
+        .construction-char {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .construction-char img {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            opacity: 0.8;
+            transition: transform 0.3s ease;
+        }
+
+        .construction-char img:hover {
+            transform: scale(1.1);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: sticky;
+            top: 30px;
+            height: fit-content;
+        }
+
+        .vtuber-card {
+            background: linear-gradient(135deg, rgba(22, 33, 62, 0.9) 0%, rgba(15, 52, 96, 0.9) 100%);
+            border: 3px solid var(--accent-gold);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(212, 175, 55, 0.15);
+        }
+
+        .vtuber-header {
+            background: linear-gradient(135deg, var(--accent-gold), #a68a3d);
+            padding: 15px;
+            text-align: center;
+        }
+
+        .vtuber-header h3 {
+            color: var(--text-dark);
+            font-size: 1.4em;
+            margin: 0;
+        }
+
+        .vtuber-image {
+            width: 100%;
+            height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 100%);
+            padding: 20px;
+        }
+
+        .vtuber-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .vtuber-content {
+            padding: 20px;
+        }
+
+        .vtuber-content h4 {
+            color: var(--accent-gold);
+            margin-bottom: 15px;
+            font-size: 1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid var(--accent-gold);
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--accent-gold);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .social-btn:hover {
+            background: var(--accent-gold);
+            color: var(--text-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .youtube-section {
+            margin-top: 15px;
+        }
+
+        .youtube-section p {
+            font-size: 0.9em;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .youtube-placeholder {
+            background: rgba(255, 0, 0, 0.1);
+            border: 2px dashed #ff0000;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            color: #ff6b6b;
+            font-size: 0.9em;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 20px;
+            }
+
+            .sidebar {
+                grid-column: 1;
+                position: static;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                width: 100px;
+                height: 100px;
+            }
+
+            .logo img {
+                width: 90px;
+                height: 90px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .social-links {
+                gap: 8px;
+            }
+
+            .social-btn {
+                padding: 10px;
+            }
+        }
+
+        /* Animaciones de entrada */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section, .vtuber-card, header {
+            animation: slideIn 0.6s ease-out;
+        }
+
+        .section:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .section:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .vtuber-card {
+            animation-delay: 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="cocomokoko.png" alt="Cocomokoko Logo">
+        </div>
+        <h1>COCOMOKOKO</h1>
+        <p class="subtitle">Gremio de Lost Ark</p>
+    </header>
+
+    <div class="container">
+        <main>
+            <!-- Sección de Noticias -->
+            <section class="section">
+                <h2><i class="fas fa-newspaper"></i> Noticias y Actualizaciones</h2>
+                <div class="content-placeholder">
+                    <p>📰 Próximas noticias del gremio y de Lost Ark...</p>
+                    <div class="construction-char">
+                        <img src="mokokos/1.png" alt="Mokoko 1">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección de Enlaces -->
+            <section class="section">
+                <h2><i class="fas fa-link"></i> Enlaces Interesantes</h2>
+                <div class="content-placeholder">
+                    <p>🔗 Colección de enlaces de interés del gremio...</p>
+                    <div class="construction-char">
+                        <img src="mokokos/2.png" alt="Mokoko 2">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección de Contenido del Juego -->
+            <section class="section">
+                <h2><i class="fas fa-gamepad"></i> Contenido del Juego</h2>
+                <div class="content-placeholder">
+                    <p>🎮 Guías, eventos y contenido de Lost Ark del gremio...</p>
+                    <div class="construction-char">
+                        <img src="mokokos/3.png" alt="Mokoko 3">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección de Actividades Grupales -->
+            <section class="section">
+                <h2><i class="fas fa-users"></i> Actividades Grupales</h2>
+                <div class="content-placeholder">
+                    <p>👥 Eventos y actividades del gremio...</p>
+                    <div class="construction-char">
+                        <img src="mokokos/4.png" alt="Mokoko 4">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección de Miembros Destacados -->
+            <section class="section">
+                <h2><i class="fas fa-star"></i> Miembros Destacados</h2>
+                <div class="content-placeholder">
+                    <p>⭐ Próximamente: galería de miembros destacados...</p>
+                    <div class="construction-char">
+                        <img src="mokokos/5.png" alt="Mokoko 5">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección de Comunidad -->
+            <section class="section">
+                <h2><i class="fas fa-comments"></i> Comunidad</h2>
+                <div class="content-placeholder">
+                    <p>💬 Foro y espacio de comunidad del gremio...</p>
+                    <div class="construction-char">
+                        <img src="mokokos/6.png" alt="Mokoko 6">
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Sidebar VTuber -->
+        <aside class="sidebar">
+            <div class="vtuber-card">
+                <div class="vtuber-header">
+                    <h3>🎙️ Líder</h3>
+                </div>
+                <div class="vtuber-image">
+                    <img src="bastito.png" alt="VTuber Bastito">
+                </div>
+                <div class="vtuber-content">
+                    <h4>Redes Sociales</h4>
+                    <div class="social-links">
+                        <a href="https://twitch.tv/xbastitox" target="_blank" class="social-btn" title="Twitch">
+                            <i class="fab fa-twitch"></i>
+                        </a>
+                        <a href="https://www.youtube.com/@xBastitox" target="_blank" class="social-btn" title="YouTube">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                    <div class="youtube-section">
+                        <p><strong>Últimos Vídeos</strong></p>
+                        <div class="youtube-placeholder">
+                            📹 Los últimos vídeos de YouTube aparecerán aquí
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+</body>
+</html>
