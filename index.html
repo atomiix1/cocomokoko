@@ -356,9 +356,10 @@
         }
 
         .slide {
-            min-width: 100%;
-            display: none;
+            min-width: 33.333%;
+            display: block;
             text-align: center;
+            padding: 0 10px;
         }
 
         .slide.active {
@@ -381,7 +382,6 @@
             max-width: 300px;
             height: auto;
             border-radius: 10px;
-            border: 2px solid var(--accent-gold);
             margin-bottom: 15px;
         }
 
@@ -447,13 +447,13 @@
                     <div class="carousel-container">
                         <div class="slide active">
                             <a href="https://www.lostark.nexus/" class="slide-link">
-                                <img src="builds.png" alt="Builds">
+                                <img src="mokokos/builds.png" alt="Builds">
                                 <p>Guías de Builds</p>
                             </a>
                         </div>
                         <div class="slide">
                             <a href="https://honing-forecast.pages.dev/" class="slide-link">
-                                <img src="honing.png" alt="Honing">
+                                <img src="mokokos/honing.png" alt="Honing">
                                 <p>Calculadora de Honing</p>
                             </a>
                         </div>
@@ -585,9 +585,6 @@
 
             nextBtn.addEventListener('click', nextSlide);
             prevBtn.addEventListener('click', prevSlide);
-
-            // Auto-play opcional
-            setInterval(nextSlide, 5000);
         });
     </script>
 </body>
