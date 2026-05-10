@@ -340,6 +340,82 @@
         .vtuber-card {
             animation-delay: 0.3s;
         }
+
+        /* Carrusel */
+        .carousel {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .carousel-container {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .slide {
+            min-width: 100%;
+            display: none;
+            text-align: center;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        .slide-link {
+            display: inline-block;
+            text-decoration: none;
+            color: var(--text-light);
+            transition: transform 0.3s ease;
+        }
+
+        .slide-link:hover {
+            transform: scale(1.05);
+        }
+
+        .slide img {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border-radius: 10px;
+            border: 2px solid var(--accent-gold);
+            margin-bottom: 15px;
+        }
+
+        .slide p {
+            font-size: 1.2em;
+            color: var(--accent-gold);
+            margin: 0;
+        }
+
+        .prev, .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(212, 175, 55, 0.8);
+            color: var(--text-dark);
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 50%;
+            font-size: 1.5em;
+            transition: background 0.3s ease;
+        }
+
+        .prev:hover, .next:hover {
+            background: var(--accent-gold);
+        }
+
+        .prev {
+            left: 10px;
+        }
+
+        .next {
+            right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -367,11 +443,41 @@
             <!-- Sección de Enlaces -->
             <section class="section">
                 <h2><i class="fas fa-link"></i> Enlaces Interesantes</h2>
-                <div class="content-placeholder">
-                    <p>🔗 Colección de enlaces de interés del gremio...</p>
-                    <div class="construction-char">
-                        <img src="mokokos/2.png" alt="Mokoko 2">
+                <div class="carousel">
+                    <div class="carousel-container">
+                        <div class="slide active">
+                            <a href="https://www.lostark.nexus/" class="slide-link">
+                                <img src="builds.png" alt="Builds">
+                                <p>Guías de Builds</p>
+                            </a>
+                        </div>
+                        <div class="slide">
+                            <a href="https://honing-forecast.pages.dev/" class="slide-link">
+                                <img src="honing.png" alt="Honing">
+                                <p>Calculadora de Honing</p>
+                            </a>
+                        </div>
+                        <div class="slide">
+                            <a href="#" class="slide-link">
+                                <img src="mokokos/1.png" alt="Mokoko 1">
+                                <p>Exploración Mokoko</p>
+                            </a>
+                        </div>
+                        <div class="slide">
+                            <a href="#" class="slide-link">
+                                <img src="mokokos/2.png" alt="Mokoko 2">
+                                <p>Eventos Especiales</p>
+                            </a>
+                        </div>
+                        <div class="slide">
+                            <a href="#" class="slide-link">
+                                <img src="mokokos/3.png" alt="Mokoko 3">
+                                <p>Comunidad Mokoko</p>
+                            </a>
+                        </div>
                     </div>
+                    <button class="prev">&lt;</button>
+                    <button class="next">&gt;</button>
                 </div>
             </section>
 
@@ -452,5 +558,37 @@
             </div>
         </aside>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const carouselContainer = document.querySelector('.carousel-container');
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.querySelector('.prev');
+            const nextBtn = document.querySelector('.next');
+            let currentIndex = 0;
+
+            function showSlide(index) {
+                slides.forEach((slide, i) => {
+                    slide.classList.toggle('active', i === index);
+                });
+            }
+
+            function nextSlide() {
+                currentIndex = (currentIndex + 1) % slides.length;
+                showSlide(currentIndex);
+            }
+
+            function prevSlide() {
+                currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+                showSlide(currentIndex);
+            }
+
+            nextBtn.addEventListener('click', nextSlide);
+            prevBtn.addEventListener('click', prevSlide);
+
+            // Auto-play opcional
+            setInterval(nextSlide, 5000);
+        });
+    </script>
 </body>
 </html>
