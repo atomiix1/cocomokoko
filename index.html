@@ -544,6 +544,10 @@
                             allowfullscreen>
                         </iframe>
                     </div>
+                    <div class="youtube-section">
+                        <p><strong>Último vídeo</strong></p>
+                        <iframe id="youtube-iframe" src="" height="236" width="420" allowfullscreen></iframe>
+                    </div>
                 </div>
             </div>
         </aside>
@@ -579,6 +583,20 @@
 
             nextBtn.addEventListener('click', nextSlide);
             prevBtn.addEventListener('click', prevSlide);
+
+            // Load latest YouTube video
+            fetch('https://www.youtube.com/feeds/videos.xml?channel_id=UCM1iAR0EYdrqoLfUUu3fWEw')
+                .then(response => response.text())
+                .then(data => {
+                    const parser = new DOMParser();
+                    const xml = parser.parseFromString(data, 'application/xml');
+                    const videoIdElement = xml.getElementsByTagNameNS('http://www.youtube.com/xml/schemas/2015', 'videoId')[0];
+                    if (videoIdElement) {
+                        const videoId = videoIdElement.textContent;
+                        document.getElementById('youtube-iframe').src = `https://www.youtube.com/embed/${videoId}`;
+                    }
+                })
+                .catch(error => console.error('Error fetching YouTube feed:', error));
         });
     </script>
 </body>
