@@ -230,7 +230,7 @@
             background: rgba(212, 175, 55, 0.1);
             color: var(--accent-gold);
             border-radius: 8px;
-            cursor: pointer;
+            cursor: url('cursor_hover.png'), auto;
             transition: all 0.3s ease;
             text-decoration: none;
             display: flex;
@@ -345,7 +345,6 @@
         .carousel {
             position: relative;
             width: 100%;
-            max-width: 600px;
             margin: 0 auto;
             overflow: hidden;
         }
@@ -353,13 +352,21 @@
         .carousel-container {
             display: flex;
             transition: transform 0.5s ease;
+            gap: 20px;
+            width: 100%;
         }
 
         .slide {
-            min-width: 33.333%;
+            flex: 0 0 calc(25% - 15px);
             display: block;
             text-align: center;
             padding: 0 10px;
+            min-width: 200px;
+            max-width: 300px;
+        }
+
+        .carousel.needs-carousel .slide {
+            flex: 0 0 calc(100% - 20px);
         }
 
         .slide.active {
@@ -400,10 +407,19 @@
             color: var(--text-dark);
             border: none;
             padding: 10px 15px;
-            cursor: pointer;
+            cursor: url('cursor_hover.png'), auto;
             border-radius: 50%;
             font-size: 1.5em;
             transition: background 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .carousel.needs-carousel .prev,
+        .carousel.needs-carousel .next {
+            opacity: 1;
+            pointer-events: auto;
         }
 
         .prev:hover, .next:hover {
@@ -419,9 +435,40 @@
             right: 10px;
         }
 
+        @media (max-width: 1200px) {
+            .slide {
+                flex: 0 0 calc(33.333% - 13.33px);
+            }
+
+            .carousel.needs-carousel .slide {
+                flex: 0 0 calc(100% - 20px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                flex: 0 0 calc(50% - 10px);
+            }
+
+            .carousel.needs-carousel .slide {
+                flex: 0 0 calc(100% - 20px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .slide {
+                flex: 0 0 calc(100% - 20px);
+            }
+        }
+
         /* Cursor para enlaces */
         a:hover {
             cursor: url('cursor_hover.png'), auto;
+        }
+
+        /* Cursor para iframes */
+        iframe {
+            cursor: url('cursor.png'), auto;
         }
     </style>
 </head>
@@ -544,34 +591,64 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const carousel = document.querySelector('.carousel');
             const carouselContainer = document.querySelector('.carousel-container');
             const slides = document.querySelectorAll('.slide');
             const prevBtn = document.querySelector('.prev');
             const nextBtn = document.querySelector('.next');
             let currentIndex = 0;
             const totalSlides = slides.length;
+            let itemsPerView = 4;
+            let needsCarousel = false;
+
+            function calculateItemsPerView() {
+                const containerWidth = carousel.offsetWidth;
+                const minItemWidth = 200;
+                const gap = 20;
+                
+                // Calcula cuántos items caben
+                const calculatedItems = Math.floor((containerWidth + gap) / (minItemWidth + gap));
+                itemsPerView = Math.max(1, Math.min(calculatedItems, totalSlides));
+                
+                // Determina si necesita carrusel
+                needsCarousel = totalSlides > itemsPerView;
+                
+                if (needsCarousel) {
+                    carousel.classList.add('needs-carousel');
+                } else {
+                    carousel.classList.remove('needs-carousel');
+                    currentIndex = 0;
+                }
+
+                updateCarousel();
+            }
 
             function updateCarousel() {
-                const offset = currentIndex * -33.333;
+                const itemWidth = 100 / itemsPerView;
+                const offset = currentIndex * -itemWidth;
                 carouselContainer.style.transform = `translateX(${offset}%)`;
             }
 
             function nextSlide() {
-                if (currentIndex < totalSlides - 3) {
+                if (needsCarousel && currentIndex < totalSlides - itemsPerView) {
                     currentIndex++;
                     updateCarousel();
                 }
             }
 
             function prevSlide() {
-                if (currentIndex > 0) {
+                if (needsCarousel && currentIndex > 0) {
                     currentIndex--;
                     updateCarousel();
                 }
             }
 
-            nextBtn.addEventListener('click', nextSlide);
             prevBtn.addEventListener('click', prevSlide);
+            nextBtn.addEventListener('click', nextSlide);
+
+            // Calcula items per view inicialmente y al redimensionar
+            calculateItemsPerView();
+            window.addEventListener('resize', calculateItemsPerView);
 
             // Load latest YouTube video via a CORS-friendly RSS-to-JSON proxy
             fetch('https://api.rss2json.com/v1/api.json?rss_url=https://www.youtube.com/feeds/videos.xml?channel_id=UCM1iAR0EYdrqoLfUUu3fWEw')
