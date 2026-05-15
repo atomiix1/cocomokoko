@@ -467,8 +467,13 @@
         }
 
         /* Cursor para iframes */
-        iframe {
+        .iframe-container {
+            position: relative;
             cursor: url('cursor.png'), auto;
+        }
+
+        .iframe-container iframe {
+            display: block;
         }
     </style>
 </head>
@@ -573,16 +578,20 @@
                     </div>
                     <div class="twitch-section">
                         <p><strong>Directo</strong></p>
-                        <iframe
-                            src="https://player.twitch.tv/?channel=xbastitox&parent=atomiix1.github.io"
-                            height="236"
-                            width="420"
-                            allowfullscreen>
-                        </iframe>
+                        <div class="iframe-container">
+                            <iframe
+                                src="https://player.twitch.tv/?channel=xbastitox&parent=atomiix1.github.io"
+                                height="236"
+                                width="420"
+                                allowfullscreen>
+                            </iframe>
+                        </div>
                     </div>
                     <div class="youtube-section">
                         <p><strong>Último vídeo</strong></p>
-                        <iframe id="youtube-iframe" src="" height="236" width="420" allowfullscreen></iframe>
+                        <div class="iframe-container">
+                            <iframe id="youtube-iframe" src="" height="236" width="420" allowfullscreen></iframe>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -603,18 +612,25 @@
 
             function calculateItemsPerView() {
                 const containerWidth = carousel.offsetWidth;
-                const minItemWidth = 200;
+                const slideElement = slides[0];
+                
+                if (!slideElement) return;
+                
+                // Obtener el ancho computado del slide
+                const slideWidth = slideElement.offsetWidth;
                 const gap = 20;
                 
-                // Calcula cuántos items caben
-                const calculatedItems = Math.floor((containerWidth + gap) / (minItemWidth + gap));
-                itemsPerView = Math.max(1, Math.min(calculatedItems, totalSlides));
+                // Calcula cuántos items caben realmente
+                const canFit = Math.floor((containerWidth + gap) / (slideWidth + gap));
+                itemsPerView = Math.max(1, Math.min(canFit, totalSlides));
                 
-                // Determina si necesita carrusel
+                // Determina si necesita carrusel (si no caben todos los items)
                 needsCarousel = totalSlides > itemsPerView;
                 
                 if (needsCarousel) {
                     carousel.classList.add('needs-carousel');
+                    // En modo carrusel, mostrar 1 item a la vez
+                    itemsPerView = 1;
                 } else {
                     carousel.classList.remove('needs-carousel');
                     currentIndex = 0;
@@ -646,9 +662,31 @@
             prevBtn.addEventListener('click', prevSlide);
             nextBtn.addEventListener('click', nextSlide);
 
-            // Calcula items per view inicialmente y al redimensionar
-            calculateItemsPerView();
+            // Calcula items per view inicialmente (con un pequeño delay para asegurar rendering)
+            setTimeout(() => {
+                calculateItemsPerView();
+            }, 100);
+            
             window.addEventListener('resize', calculateItemsPerView);
+
+            // Cursor personalizado para iframes - usa posición del ratón
+            const iframeContainers = document.querySelectorAll('.iframe-container');
+            let mouseX = 0;
+            let mouseY = 0;
+            
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                
+                // Verifica si el cursor está sobre algún iframe container
+                iframeContainers.forEach(container => {
+                    const rect = container.getBoundingClientRect();
+                    if (mouseX >= rect.left && mouseX <= rect.right &&
+                        mouseY >= rect.top && mouseY <= rect.bottom) {
+                        document.body.style.cursor = "url('cursor.png'), auto";
+                    }
+                });
+            });
 
             // Load latest YouTube video via a CORS-friendly RSS-to-JSON proxy
             fetch('https://api.rss2json.com/v1/api.json?rss_url=https://www.youtube.com/feeds/videos.xml?channel_id=UCM1iAR0EYdrqoLfUUu3fWEw')
